@@ -97,6 +97,40 @@ app.post("/player/take-damage", (req: Request, res: Response) => {
     });
 });
 
+app.post("/player/take-health", (req: Request, res: Response) => {
+    const { health } = req.body;
+    const healthMessage = player.takeHealth(health);
+    //salvar o estado atual do player no arquivo JSON
+    savePlayerState(player);
+    // Retorna uma resosta JSON com a mensagem da cura
+    //para o cliente que fez a requisição
+    res.json({
+        //Retorna a mensagem da cura recebida
+        action: healthMessage,
+        // Retorna a saude atual do jogador
+        currentHealth: player.health,
+        // Retorna o nível do jogador
+        currentLevel: player.level 
+    });
+});
+
+app.post("/player/up-level", (req: Request, res: Response) => {
+    const { level } = req.body;
+    const levelMessage = player.upLevel(level);
+    //salvar o estado atual do player no arquivo JSON
+    savePlayerState(player);
+    // Retorna uma resosta JSON com a mensagem da cura
+    //para o cliente que fez a requisição
+    res.json({
+        //Retorna a mensagem da cura recebida
+        action: levelMessage,
+        // Retorna a saude atual do jogador
+        currentHealth: player.health,
+        // Retorna o nível do jogador
+        currentLevel: player.level 
+    });
+});
+
 // Inicializa o servidor utilizando a porta definida
 // O método listen() faz o servidor começar a "escutar" requisições HTTP
 app.listen(PORT, () => {
@@ -105,4 +139,6 @@ console.log("Rotas disponiveis:");
 console.log(`GET http://localhost:${PORT}/player - obter informações do jogador`);
 console.log(`POST http://localhost:${PORT}/player/attack - Jogador realiza um ataque`);
 console.log(`POST http://localhost:${PORT}/player/take-damage - Jogador recebe dano`);
+console.log(`POST http://localhost:${PORT}/player/take-health - Jogador recebe cura`);
+console.log(`POST http://localhost:${PORT}/player/up-level - Jogador aumenta de nível`);
 });
